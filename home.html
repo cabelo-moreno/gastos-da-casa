@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gastos da Casa</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+</head>
+<body>
+  <h1>Meus Gastos</h1>
+  <table border="1" id="gastos-table">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Categoria</th>
+        <th>Descrição</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const publicSpreadsheetURL = 'https://docs.google.com/spreadsheets/d/1STMEeICq_ShlzIL8MTvQyDSBBs9dMPZX72sBS51xB6o/edit?usp=sharing';
+
+    function showInfo(data) {
+      const tbody = document.querySelector('#gastos-table tbody');
+      data.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.Data}</td>
+          <td>${item.Categoria}</td>
+          <td>${item.Descrição}</td>
+          <td>R$ ${item.Valor}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      Tabletop.init({
+        key: publicSpreadsheetURL,
+        callback: showInfo,
+        simpleSheet: true
+      });
+    });
+  </script>
+</body>
+</html>
