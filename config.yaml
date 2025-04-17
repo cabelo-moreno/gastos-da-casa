@@ -1,0 +1,35 @@
+# Configuração da planilha do Google Sheets
+spreadsheet:
+  url: 'https://docs.google.com/spreadsheets/d/1STMEeICq_ShlzIL8MTvQyDSBBs9dMPZX72sBS51xB6o/edit?usp=sharing'
+  sheet:
+    name: 'Sheet1'
+    colunas:
+      data: 'Data'
+      categoria: 'Categoria'
+      descricao: 'Descrição'
+      valor: 'Valor'
+
+# Orçamentos padrão por categoria (em reais)
+orcamentos:
+  Alimentação: 1000
+  Moradia: 2000
+  Transporte: 500
+  Saúde: 300
+  Educação: 400
+  Lazer: 300
+  Outros: 500
+
+# Cores para os gráficos
+grafico_cores:
+  - '#2ecc71'  # Verde
+  - '#3498db'  # Azul
+  - '#9b59b6'  # Roxo
+  - '#e74c3c'  # Vermelho
+  - '#f1c40f'  # Amarelo
+  - '#1abc9c'  # Verde água
+  - '#e67e22'  # Laranja
+
+# Configurações de alerta do orçamento
+alertas:
+  alerta_porcentagem: 80    # Alerta quando atinge 80% do orçamento
+  excedido_porcentagem: 100  # Excedido quando passa de 100% do orçamento 
