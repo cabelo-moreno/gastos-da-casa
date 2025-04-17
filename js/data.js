@@ -132,7 +132,7 @@ function inicializarAplicacao() {
 }
 
 // Event Listeners
-document.getElementById('gasto-form').addEventListener('submit', function(e) {
+document.getElementById('gasto-form').addEventListener('submit', async function(e) {
   e.preventDefault();
   
   const rowId = document.getElementById('row-id').value;
@@ -143,32 +143,41 @@ document.getElementById('gasto-form').addEventListener('submit', function(e) {
     [CONFIG.spreadsheet.sheet.colunas.valor]: document.getElementById('valor').value
   };
 
-  const data = tabletop.sheets(CONFIG.spreadsheet.sheet.name).elements();
-  
-  if (rowId === '') {
-    // Adicionar novo gasto
-    data.push(newGasto);
-  } else {
-    // Editar gasto existente
-    const dadosFiltrados = filtrarDados();
-    const gastoParaEditar = dadosFiltrados[rowId];
-    const indexReal = data.findIndex(item => 
-      item[CONFIG.spreadsheet.sheet.colunas.data] === gastoParaEditar.Data && 
-      item[CONFIG.spreadsheet.sheet.colunas.categoria] === gastoParaEditar.Categoria &&
-      item[CONFIG.spreadsheet.sheet.colunas.descricao] === gastoParaEditar.Descrição &&
-      item[CONFIG.spreadsheet.sheet.colunas.valor] === gastoParaEditar.Valor
-    );
+  try {
+    const data = tabletop.sheets(CONFIG.spreadsheet.sheet.name).elements();
     
-    if (indexReal !== -1) {
-      data[indexReal] = newGasto;
+    if (rowId === '') {
+      // Adicionar novo gasto
+      data.push(newGasto);
+    } else {
+      // Editar gasto existente
+      const dadosFiltrados = filtrarDados();
+      const gastoParaEditar = dadosFiltrados[rowId];
+      const indexReal = data.findIndex(item => 
+        item[CONFIG.spreadsheet.sheet.colunas.data] === gastoParaEditar.Data && 
+        item[CONFIG.spreadsheet.sheet.colunas.categoria] === gastoParaEditar.Categoria &&
+        item[CONFIG.spreadsheet.sheet.colunas.descricao] === gastoParaEditar.Descrição &&
+        item[CONFIG.spreadsheet.sheet.colunas.valor] === gastoParaEditar.Valor
+      );
+      
+      if (indexReal !== -1) {
+        data[indexReal] = newGasto;
+      }
     }
-  }
 
-  tabletop.sheets(CONFIG.spreadsheet.sheet.name).elements = data;
-  tabletop.sheets(CONFIG.spreadsheet.sheet.name).save();
-  showInfo(data);
-  
-  limparFormulario();
+    // Atualizar a planilha
+    tabletop.sheets(CONFIG.spreadsheet.sheet.name).elements = data;
+    await tabletop.sheets(CONFIG.spreadsheet.sheet.name).save();
+    
+    // Atualizar a visualização
+    showInfo(data);
+    limparFormulario();
+    
+    alert(rowId === '' ? 'Gasto adicionado com sucesso!' : 'Gasto atualizado com sucesso!');
+  } catch (error) {
+    console.error('Erro ao salvar gasto:', error);
+    alert('Erro ao salvar gasto. Por favor, tente novamente.');
+  }
 });
 
 document.getElementById('mes-select').addEventListener('change', () => showInfo(gastosData));
